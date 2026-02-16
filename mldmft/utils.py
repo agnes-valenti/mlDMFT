@@ -10,6 +10,7 @@ from triqs.plot.mpl_interface import *
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def make_1d_to_2d(data_1d):
     lentaus = np.shape(data_1d)[1]
     n_orb = np.sqrt(0.25+np.shape(data_1d)[2])-0.5
@@ -53,6 +54,22 @@ def loaded_to_DLR(Goutput_real, Goutput_imag, lentaus, gf_struct, beta=10, wmax_
         it += 1
     Goutput_dlr = make_gf_dlr(Goutputtau_dlr)
     return Goutput_dlr
+
+def get_freq_plotting_data(G_iw):
+    mesh = G_iw.mesh
+    omegas = []
+    for omega in mesh:
+        omegas.append((omega.value.value))
+    
+    G_iw_out = {}
+    for name, g in G_iw:
+        gvals = []
+        for omega in mesh:
+            gvals.append(g[omega])
+        G_iw_out[name] = np.array(gvals)
+    return np.array(omegas).imag, G_iw_out
+        
+        
 
 
 def Delta_to_G0(Goutput, Deltatau_initshape, taus, muval, cfield_splitting, gf_struct, n_orb, wmax_val=10, eps_val=1e-13, beta=10, n_iw=1025, n_tau=10001):
@@ -169,3 +186,44 @@ def plot_from_triqs(triqs_gf, filename_):
                 #axs[a,b].plot(tauvfullvals, gfullvals.real, label=name + '_full')
                 axs[a,b].plot(tauvals_, gvals_.real, alpha = alphavals, color='black',label=name + '_dlr')
     plt.savefig(filename_ + "_plotfromtriqs.png")
+
+def triqs_to_NN(G_tau, n_orb=2):
+        G_dlr = fit_gf_dlr(G_tau, w_max=10, eps=1e-13)
+
+        #Gfreq = make_gf_from_fourier(G_tau)
+        Gtau_dlr = make_gf_dlr_imtime(G_dlr)
+        Giw_dlr = make_gf_dlr_imfreq(G_dlr)
+
+        dlr_iw_mesh=Giw_dlr.mesh
+        dlr_iw_omegas = []
+        for omega in dlr_iw_mesh:
+            dlr_iw_omegas.append(np.imag(omega.value.value))
+        nomegas = len(dlr_iw_omegas)
+        dlr_iw_omegas = np.array(dlr_iw_omegas)
+
+        ntaus_dlr = nomegas 
+
+        Gtau_up_vals = np.zeros((ntaus_dlr, n_orb, n_orb)) + 0j
+        Gtau_down_vals = np.zeros((ntaus_dlr, n_orb, n_orb)) + 0j
+        Giw_up_vals = np.zeros((nomegas, n_orb, n_orb)) + 0j
+        Giw_down_vals = np.zeros((nomegas, n_orb, n_orb)) + 0j
+        
+        tauvals = []    
+        
+        it = 0
+        for tau in Gtau_dlr.mesh:
+            Gtau_up_vals[it,:,:]=Gtau_dlr['up'][tau][:,:]
+            Gtau_down_vals[it,:,:]=Gtau_dlr['down'][tau][:,:]
+          
+            tauvals.append(tau.value)
+            it += 1
+        gtau_up = make_2d_to_1d(Gtau_up_vals)
+        gtau_down = make_2d_to_1d(Gtau_down_vals)
+
+        tauvals = np.array(tauvals)
+        return gtau_up, gtau_down 
+        
+
+
+
+
