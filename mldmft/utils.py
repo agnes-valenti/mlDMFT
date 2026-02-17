@@ -97,7 +97,7 @@ def DLR_to_NNinput(Delta_dlr, dlr_tau_mesh_loaded, U, mu, beta):
 
     return nn_input
 
-def switch_mesh(gf_dlr, mesh_new, beta_new, beta_old=70.0, gf_struct=[('up', 1), ('down', 1)],):
+def switch_mesh(gf_dlr, beta_new, beta_old=70.0, gf_struct=[('up', 1), ('down', 1)], wmax_val=10.0, eps_val=1e-13):
     """Switch the mesh of a Green's function from mesh_old to mesh_new, adjusting for different beta values.
 
     Args:
@@ -111,6 +111,7 @@ def switch_mesh(gf_dlr, mesh_new, beta_new, beta_old=70.0, gf_struct=[('up', 1),
         BlockGf: The Green's function with the new mesh.
     """
     
+    mesh_new = MeshDLRImTime(beta=beta_new, statistic='Fermion', w_max=wmax_val, eps=eps_val)
     gf_tau_dlr_new = BlockGf(mesh=mesh_new, gf_struct=gf_struct)
     for tau in mesh_new:
         gf_tau_dlr_new['up'][tau][0,0] = gf_dlr['up'](tau*beta_old/beta_new)[0,0]
