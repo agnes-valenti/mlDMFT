@@ -33,7 +33,7 @@ def test_dlr_nn():
 
     deltainput_nn = np.reshape(deltainput, (deltainput.shape[0], deltainput.shape[1]*deltainput.shape[2]))
     delta_dlr = NNoutput_to_DLR(deltainput_nn, dlr_tau_mesh_loaded)
-    delta_dlr = switch_mesh(delta_dlr, dlr_mesh_new, beta)
+    delta_dlr = switch_mesh(delta_dlr, beta, mesh_new=dlr_mesh_new)
     deltainput_nn_compare = DLR_to_NNinput(delta_dlr, dlr_tau_mesh_loaded, u, mu, beta)[:,:-3]
     print("DeltainputNN_compare:", deltainput_nn_compare)
     print("DeltainputNN:", deltainput_nn)
