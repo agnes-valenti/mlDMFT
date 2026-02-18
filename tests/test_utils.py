@@ -15,6 +15,8 @@ def test_dlr_nn():
         dlr_tau_mesh_loaded = h5['mesh_dlr_imtime']
     wmax_val = 10
     eps_val = 1e-13
+    
+    np.random.seed(0) # for reproducibility
     beta = np.random.rand()*70+10 
     u = np.random.rand()*7.0
     mu = np.random.rand()*u
@@ -37,7 +39,7 @@ def test_dlr_nn():
     deltainput_nn_compare = DLR_to_NNinput(delta_dlr, dlr_tau_mesh_loaded, u, mu, beta)[:,:-3]
     print("DeltainputNN_compare:", deltainput_nn_compare)
     print("DeltainputNN:", deltainput_nn)
-    assert np.allclose(deltainput_nn, deltainput_nn_compare)
+    assert np.allclose(deltainput_nn, deltainput_nn_compare, atol=1e-10)
 
 #def test_1d():
 #    n_orb = 2
