@@ -15,4 +15,6 @@ This includes
 3) mldmft/models/orb3: The 3-orbital Green's function solver
 4) mldmft/models/orb3_dens: The 3-orbital density solver
 
-mldmft/examples: This folder contains selected examples that demonstrate how GNet is utilized in a DMFT loop and its interface with TRIQS.
+mldmft/examples: This folder contains selected examples that demonstrate how GNet is utilized in a DMFT loop and its interface with TRIQS (for the 1-and 2-orbital case).
+
+Running the examples requires an installation of torch (>= 2.6.0) and the library TRIQS. We will update a full list of requirements, as well as examples on using the 3-orbital solver soon. 
