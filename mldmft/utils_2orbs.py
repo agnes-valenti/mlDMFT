@@ -5,11 +5,9 @@ from triqs.gf.descriptors import Function
 from h5 import *
 from triqs.operators import *
 import triqs.utility.mpi as mpi
-#import triqs_ctseg as ctseg_new
 from triqs.plot.mpl_interface import *
 import numpy as np
 import matplotlib.pyplot as plt
-
 
 def _make_1d_to_2d(data_1d, n_orb = 2, sample_ind=0):
     lentaus = np.shape(data_1d)[1]
